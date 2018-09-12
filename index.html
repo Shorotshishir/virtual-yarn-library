@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html ng-app="my_app">
+<head>
+	<title>SQ Virtual Yarn Library</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/angular.min.js"></script>
+	 <script src="js/ui-grid.js"></script>
+    <link rel="stylesheet" href="css/ui-grid.css" type="text/css">
+</head>
+<body ng-controller="my_ctrl">
+	<div class="col-md-12">
+		<legend><h3>SQ Virtual Yarn Library
+		<a href="admin_panel.html" class="btn btn-primary pull-right">Manage Items</a></h3></legend>
+		<div class="grid" id="grid" ui-grid="gridOptions" ui-grid-pagination style="width: 100%; height: 80vh"></div>
+	</div>
+	<div id="image_modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Image</h4>
+	      </div>
+	      <div class="modal-body" style="height: auto; padding: auto">
+	      	<img ng-src="{{clicked_image}}" alt="" class="img-responsive">
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close_edit_modal()">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+</body>
+<script type="text/javascript">
+	var app=angular.module("my_app",['ui.grid','ui.grid.pagination']);
+	app.controller("my_ctrl",function($scope,$http){
+		$scope.all_data;
+		$scope.clicked_image;
+		$scope.gridOptions = {
+		    enableFiltering: true,
+		    rowHeight: 50,
+		    paginationPageSizes: [20,25, 50, 75,100],
+    		paginationPageSize: 20,
+		    onRegisterApi: function(gridApi){
+		      $scope.gridApi = gridApi;
+		    },
+		    columnDefs: [
+		      // default
+		      { field: 'image', width:"5%", enableFiltering:false,cellTemplate:"<div style='width:100%' ng-click='grid.appScope.open_image(row.entity.image_path)'><img ng-src={{'db/'+row.entity.image_path}} class='img-thumbnail' height='60' width='60'><img>"},
+		      { field: 'company',displayName: 'Suppliers', width:"10%"},
+		      { field: 'season', width:"10%"},
+		      { field: 'style', width:"10%"},
+		      { field: 'color_code',displayName: 'Article', width:"10%"},
+		      { field: 'compositions', width:"30%"},
+		      { field: 'count', width:"5%"},
+		      { field: 'gauge', width:"5%"},
+					{ field: 'price', width:"5%"},
+		      { field: 'name', displayName: 'Remarks' , width:"10%"}
+		    ]
+		  };
+		$http.get("db/get_all_data.php")
+		.then(function(response){
+			$scope.all_data=response.data;
+			$scope.gridOptions.data=response.data;
+		});
+		$scope.open_image=function(x){
+			$scope.clicked_image='db/'+x;
+			$('#image_modal').modal('show');
+		}
+	});
+</script>
+</html>

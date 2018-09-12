@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html ng-app="my_app">
+<head>
+	<title>SQ Virtual Yarn Library</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/ui-grid.js"></script>
+    <link rel="stylesheet" href="css/ui-grid.css" type="text/css">
+</head>
+<body ng-controller="my_ctrl">
+	<div class="col-md-12">
+		<legend><h3>Manage Items
+		<a href="index.html" class="btn btn-primary pull-right">All Items</a></h3></legend>
+		<button class="btn btn-primary" data-toggle="modal" data-target="#add_modal">+ Add New</button>
+		<div class="grid" id="grid" ui-grid="gridOptions" ui-grid-pagination style="width: 100%; height: 80vh"></div>
+	</div>
+	
+	<div id="add_modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Add New Item</h4>
+	      </div>
+	      <div class="modal-body" style="height: auto;">
+	        <form class="form-horizontal" action="/action_page.php" name="add_from" enctype="multipart/form-data">
+	        	<div class="col-md-7">
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="comapny">Company:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="comapny" placeholder="" ng-model="add_data.company" required>
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="season">Season:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="season" placeholder="" ng-model="add_data.season" required>
+					    </div>
+					</div>
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="style">Style:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="style" placeholder="" ng-model="add_data.style" required>
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="color">Article:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="color" placeholder="" ng-model="add_data.color" required>
+					    </div>
+					</div>
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="composition">Composition:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="composition" placeholder="" ng-model="add_data.comps" required>
+					    </div>
+					</div>
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="count">Count:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="count" placeholder="" ng-model="add_data.count">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="gauge">Gauge:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="gauge" placeholder="" ng-model="add_data.gauge">
+					    </div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-4" for="gauge">Price:</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="price" placeholder="" ng-model="add_data.price">
+						</div>
+				</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="name">Remarks:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="name" placeholder="" ng-model="add_data.name">
+					    </div>
+					</div>
+	        	</div>
+				<div class="col-md-5">
+					<h4>Attach image</h4><hr>
+					<input type="file" name="files" id="file" ng-model="file" accept="image/x-png,image/gif,image/jpeg">
+				</div>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" ng-disabled="add_from.$valid==false" ng-click="save_new_item()">Save</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+	<div id="edit_modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Add New Item</h4>
+	      </div>
+	      <div class="modal-body" style="height: auto;">
+	        <form class="form-horizontal" name="edit_from" action="/action_page.php" enctype="multipart/form-data">
+	        	<div class="col-md-7">
+	        		
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="comapny">Company:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="comapny" placeholder="" ng-model="edit_data.company">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="season">Season:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="season" placeholder="" ng-model="edit_data.season">
+					    </div>
+					</div>
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="style">Style:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="style" placeholder="" ng-model="edit_data.style">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="color">Color:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" placeholder="" ng-model="edit_data.color_code">
+					    </div>
+					</div>
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="composition">Composition:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="composition" placeholder="" ng-model="edit_data.compositions">
+					    </div>
+					</div>
+				 	<div class="form-group">
+					    <label class="control-label col-sm-4" for="count">Count:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="count" placeholder="" ng-model="edit_data.count">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="gauge">Gauge:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="gauge" placeholder="" ng-model="edit_data.gauge">
+					    </div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-4" for="gauge">Price:</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="price" placeholder="" ng-model="add_data.price">
+						</div>
+				</div>
+					<div class="form-group">
+					    <label class="control-label col-sm-4" for="name">Remarks:</label>
+					    <div class="col-sm-8">
+					      <input type="text" class="form-control" id="name" placeholder="" ng-model="edit_data.name">
+					    </div>
+					</div>
+	        	</div>
+				<div class="col-md-5">
+					<h4>Attach image</h4><hr>
+					<input type="file" name="files" id="file2" ng-model="file" accept="image/x-png,image/gif,image/jpeg">
+				</div>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" ng-disabled="edit_from.$pristine==true" ng-click="save_edited_item()">Save</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close_edit_modal()">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+</body>
+<script type="text/javascript">
+	var app= angular.module('my_app',['ui.grid','ui.grid.pagination']);
+	app.controller("my_ctrl",function($http,$scope){
+		$scope.add_data;
+		$scope.edit_data;
+		$scope.all_data;
+		$scope.selected_image;
+		$scope.image_selected;
+		$scope.gridOptions = {
+		    enableFiltering: true,
+		    paginationPageSizes: [20,25, 50, 75,100],
+    		paginationPageSize: 20,
+		    onRegisterApi: function(gridApi){
+		      $scope.gridApi = gridApi;
+		    },
+		    columnDefs: [
+		      // default
+		      { field: 'image', width:"5%", enableFiltering:false,cellTemplate:"<img ng-src={{'db/'+row.entity.image_path}} class='img-thumbnail' height='40' width='25'><img>"},
+		      
+		      { field: 'company', width:"10%"},
+		      { field: 'season', width:"5%"},
+		      { field: 'style', width:"10%"},
+		      { field: 'color_code',displayName: 'Article', width:"10%"},
+		      { field: 'compositions', width:"25%"},
+		      { field: 'count', width:"5%"},
+		      { field: 'gauge', width:"5%"},
+					{ field: 'price', width:"5%"},
+		      { field: 'name', displayName: 'Remarks' , width:"10%"},
+		      { field: 'gauge',displayName: 'action',enableFiltering:false,cellTemplate:"<button type='button' class='btn btn-primary btn-sm' ng-click='grid.appScope.edit(row.entity)'>Edit</button> <button type='button' class='btn btn-danger btn-sm' ng-click='grid.appScope.del(row.entity.id)'>Delete</button>"}
+		      
+		      // pre-populated search field
+		      
+		    ]
+		};
+		$http.get("db/get_all_data.php")
+		.then(function(response){
+			$scope.all_data=response.data;
+			$scope.gridOptions.data=response.data;
+		});
+		$scope.save_new_item=function(){
+			$scope.add_data.op="insert";
+			$scope.add_data.file=document.getElementById('file').files[0];
+			$http.post("db/add_items.php",$scope.add_data)
+			.then(function(response){
+				console.log(response);
+				if(response.data=='ok'){
+					var fd = new FormData();
+					var files = document.getElementById('file').files[0];
+					fd.append('file',files);
+
+					$http({
+					   method: 'post',
+					   url: 'db/upload_file.php',
+					   data: fd,
+					   headers: {'Content-Type': undefined},
+					}).then(function successCallback(response) { 
+					    $('#add_modal').modal('hide');
+					    location.reload();
+					});
+				}
+				
+			});
+		}
+		$scope.save_edited_item=function(){
+			$scope.edit_data.op="update";
+			$scope.edit_data.file=document.getElementById('file').files[0];
+			console.log($scope.edit_data);
+			$http.post("db/add_items.php",$scope.edit_data)
+			.then(function(response){
+				
+				// if(response.data=='ok'){
+					var fd = new FormData();
+					var files = document.getElementById('file2').files[0];
+					fd.append('file',files);
+					fd.append('id',$scope.edit_data.id);
+					$http({
+					   method: 'post',
+					   url: 'db/edit_upload.php',
+					   data: fd,
+					   headers: {'Content-Type': undefined},
+					}).then(function successCallback(response) { 
+					    $('#edit_modal').modal('hide');
+					    //location.reload();
+					});
+				// }
+			});
+		}
+		$scope.edit=function(x){
+			$scope.edit_data=x;
+			$scope.edit_data.op="update";
+			$scope.edit_data.count=$scope.edit_data.count;
+			document.getElementById("color").value = $scope.edit_data.color;
+			$("#edit_modal").modal("show");
+		}
+		$scope.close_edit_modal=function(){
+			$scope.gridApi.core.refresh();
+		}
+		$scope.del=function(x){
+			var r = confirm("Sure to delete?");
+			if (r == true) {
+			    $http.get("db/del_item.php?id="+x).
+				then(function(response){
+					location.reload();
+				});
+			}
+		}
+	});
+</script>
+</html>
